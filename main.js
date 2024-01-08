@@ -24,8 +24,10 @@ async function main() {
     if (!appAsarStat.isFile()) return Promise.reject("未找到app.asar文件");
 
     // 清理之前解压出来的文件夹
-    let appDirPath = path.join(resourcePath, "./app");
+    let appDirPath = path.join(__dirname, "./app");
+    let tmpAppAsarPath = path.join(__dirname, "./app.asar");
     await fs.remove(appDirPath);
+    await fs.remove(tmpAppAsarPath);
     
     // 解压
     console.log(chalk.greenBright("📌 app.asar 文件解压开始"));
@@ -41,11 +43,13 @@ async function main() {
     console.log(chalk.greenBright("✅ 修改文件结束"));
 
     console.log(chalk.greenBright("📌 app.asar 文件生成开始"));
-    await asar.createPackage(appDirPath, appAsarPath);
+    await asar.createPackage(appDirPath, tmpAppAsarPath);
+    await fs.copy(tmpAppAsarPath, appAsarPath);
     console.log(chalk.greenBright("✅ app.asar 文件生成结束"));
 
     // 清理之前解压出来的文件夹
     await fs.remove(appDirPath);
+    await fs.remove(tmpAppAsarPath);
 }
 
 function modifyLicenseFile(rootPath) {
@@ -61,8 +65,8 @@ function modifyLicenseFile(rootPath) {
                 ["MAX_TRIAL_DAYS", "TRIAL_DAYS"].includes(node.id.name)
             ) {
                 // 修改 MAX_TRIAL_DAYS, TRIAL_DAYS
-                node.init.value = 6000;
-                node.init.raw = "6000";
+                node.init.value = 10000;
+                node.init.raw = "10000";
             } else if (
                 node.type === "Property" &&
                 node.kind === "init" &&
