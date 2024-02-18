@@ -15,6 +15,12 @@ async function main() {
         resourcePath = path.join(os.homedir(), './AppData/Local/Programs/nosqlbooster4mongo/resources');
     } else if (os.platform() === 'darwin') {
         resourcePath = '/Applications/NoSQLBooster for MongoDB.app/Contents/Resources';
+    } else if (os.platform() === 'linux') {
+        try {
+            let cmd = `find / -name nosqlbooster4mongo -type f`;
+            let t = require('child_process').execSync(cmd);
+            if (t) resourcePath = path.dirname(t.toString().trim()) + '/resources';
+        } catch (e) {}
     }
     if (!resourcePath) return Promise.reject("不支持当前操作系统");
     console.log(chalk.greenBright("📄 app.asar 文件位置:"), chalk.blueBright(resourcePath));
