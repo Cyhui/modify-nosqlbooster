@@ -76,7 +76,7 @@ function modifyLicenseFile(rootPath) {
             } else if (
                 node.type === "Property" &&
                 node.kind === "init" &&
-                ["isPersonalLic", "isCommercialLic"].includes(node.key.name)
+                ["isPersonalLic", "isCommercialLic", "licensed"].includes(node.key.name)
             ) {
                 node.value = { type: "Literal", value: true, raw: "true" };
             }
