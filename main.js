@@ -120,6 +120,8 @@ function modifyMbExporter(rootPath) {
             if (
                 node.type === "ThrowStatement" &&
                 node.argument.type === "NewExpression" &&
+                node.argument.callee &&
+                node.argument.callee.object &&
                 node.argument.callee.object.name === "shared_1" &&
                 node.argument.callee.property.name === "MbError"
             ) {
